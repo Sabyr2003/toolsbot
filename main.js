@@ -1,10 +1,6 @@
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const fetch = require("node-fetch");
 
-
-const API_KEY = "sk-mfY5UVYaM7zGo5DdpfJym9kNyVjWkfIu"; // Вставь свой API-ключ Forefront
-const URL = "https://api.forefront.ai/v1/chat/completions";
-
 const client = new Client({
     authStrategy: new LocalAuth(),
 });
@@ -14,34 +10,9 @@ let userData = {}; // Храним данные пользователей (яз
 // Номера, на которые бот не будет реагировать
 const ignoredNumbers = [
     "7778295140@c.us",
-    "7778295140@c.us",
+    "77781728440@c.us",
     "0987654321@c.us"
 ];
-
-
-// Функция запроса к OpenAI
-async function askGPT(prompt) {
-    try {
-        const response = await fetch(URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`,
-            },
-            body: JSON.stringify({
-                model: "gpt-4", // Или "gpt-3.5-turbo"
-                messages: [{ role: "user", content: prompt }],
-            }),
-        });
-        
-        const data = await response.json();
-        return data.choices[0].message.content;
-    } catch (error) {
-        console.error("Ошибка Forefront API:", error);
-        return "Извините, у меня возникли проблемы с обработкой запроса.";
-    }
-}
-
 
 client.on("qr", (qr) => {
     console.log("QR-код получен, отсканируйте его в WhatsApp.");
@@ -78,7 +49,7 @@ client.on("message", async (msg) => {
                     "•  Сағыз Love is 🩷\n5шт 2490тг (1пачка=5сағыз)\n10шт 2990тг (2 пачка=10сағыз)\n15шт 3990тг (3 пачка немесе 1 үлкен)\n\n" +
                     "•  Именной киндер🍫 3490тг\n•  Именной Toffifee🍬 3490тг\n\n" +
                     "📍 Біз Алматы қаласы\n📦 Доставка Қазақстан бойынша (4-7 күн, 2500тг)\n\n" +
-                    "📍 Сіз қала таңдаңыз:\n\n1️⃣ Алматы\n2️⃣ Басқа қала\n3️⃣ Қайта тіл таңдау / Сменить язык"
+                    "📍 Қала таңдаңыз:\n\n1️⃣ Алматы\n2️⃣ Басқа қала\n3️⃣ Қайта тіл таңдау / Сменить язык"
                 );
                 return;
             } else if (text === "2") {
@@ -95,7 +66,7 @@ client.on("message", async (msg) => {
 
             await client.sendMessage(
                 chatId,
-                "🌍 Тілді таңдаңыз / Выберите язык:\n\n1️⃣ Қазақша 🇰🇿\n2️⃣ Русский 🇷🇺\n\nЖауап ретінде 1 немесе 2 санын жіберіңіз. / Отправьте цифру 1 или 2."
+                "✋ Сәлеметсіз бе  | Здравствуйте\n🌍 Тілді таңдаңыз | Выберите язык:\n\n1️⃣ Қазақша 🇰🇿\n2️⃣ Русский 🇷🇺\n\n1 немесе 2 санын жіберіңіз | Отправьте цифру 1 или 2"
             );
             return;
         }
@@ -151,8 +122,6 @@ client.on("message", async (msg) => {
                 userData[chatId] = { language: "ru" };
             }
             
-            let response = await askGPT(text);
-            await client.sendMessage(chatId, response);
         });
     } catch (error) {
         console.error("Ошибка при обработке сообщения:", error);
